@@ -1,2 +1,0 @@
-Station(s) with the largest temperature range:
-BOURKE-AIRPORT-AWS (Range: 24.45°C)
