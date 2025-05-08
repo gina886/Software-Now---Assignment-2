@@ -64,11 +64,14 @@ Draw a tree using recursive turtle graphics.
 - Depth: `5`
 - Reduction Factor: `0.7`
 
+#### Output:
+![alt text](image.png)
+
 ---
 
 ## 👨‍💻 Contributors
 
-- Anish Machamasi
+- Anish Machamasi (anishmachamasi2262@gmail.com)
 - Xiaoyu Wang
 - Veli Oz
 
