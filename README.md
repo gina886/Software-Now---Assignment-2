@@ -65,7 +65,8 @@ Draw a tree using recursive turtle graphics.
 - Reduction Factor: `0.7`
 
 #### Output:
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/0918da16-1dc2-4673-94c7-28ac8811033f)
+
 
 ---
 
