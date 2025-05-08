@@ -6,111 +6,115 @@ raw_text_path = os.path.join(
 )
 
 
-def encrypt_text(n, m):
-    try:
-        with open(
-            raw_text_path,
-            "r",
-        ) as file:
-            text = file.read()
-    except FileNotFoundError:
-        print("Error: raw_text.txt not found.")
-        return None
+def shift_char(char, shift, direction):
+    if not char.isalpha():
+        return char
 
-    encrypted = []
-    for char in text:
-        if char.islower():
-            if char <= "m":
-                # Shift forward by n*m
-                shift = (n * m) % 26
-                new_char = chr(((ord(char) - ord("a") + shift) % 26) + ord("a"))
-            else:
-                # Shift backward by n+m
-                shift = (n + m) % 26
-                new_char = chr(((ord(char) - ord("a") - shift) % 26) + ord("a"))
-        elif char.isupper():
-            if char <= "M":
-                # Shift backward by n
-                shift = n % 26
-                new_char = chr(((ord(char) - ord("A") - shift) % 26) + ord("A"))
-            else:
-                # Shift forward by m^2
-                shift = (m**2) % 26
-                new_char = chr(((ord(char) - ord("A") + shift) % 26) + ord("A"))
+    base = ord("A") if char.isupper() else ord("a")
+    offset = ord(char) - base
+
+    if direction == "forward":
+        new_offset = (offset + shift) % 26
+    elif direction == "backward":
+        new_offset = (offset - shift) % 26
+    else:
+        return char
+
+    return chr(base + new_offset)
+
+
+def encrypt_text(input_file, output_file, n, m, shift_log_file):
+    with open(input_file, "r") as infile, open(output_file, "w") as outfile, open(
+        shift_log_file, "w"
+    ) as log_file:
+        for line in infile:
+            encrypted_line = ""
+            for char in line:
+                if char.isalpha():
+                    if char.islower():
+                        if char <= "m":
+                            shift = n * m
+                            direction = "forward"
+                        else:
+                            shift = n + m
+                            direction = "backward"
+                    elif char.isupper():
+                        if char <= "M":
+                            shift = m * m
+                            direction = "backward"
+                        else:
+                            shift = m * m
+                            direction = "forward"
+
+                    shifted = shift_char(char, shift, direction)
+                    log_file.write(
+                        f"{shift},{direction}\n"
+                    )  # Write only shift and direction per letter
+                    encrypted_line += shifted
+                else:
+                    log_file.write("0,none\n")  # Placeholder for non-alpha characters
+                    encrypted_line += char
+            outfile.write(encrypted_line)
+
+
+def decrypt_text(input_file, output_file, shift_log_file):
+    def decrypt_char(char, shift, direction):
+        base = ord("A") if char.isupper() else ord("a")
+        if direction == "forward":
+            return chr((ord(char) - base - shift) % 26 + base)
+        elif direction == "backward":
+            return chr((ord(char) - base + shift) % 26 + base)
+        return char
+
+    with open(input_file, "r") as infile, open(output_file, "w") as outfile, open(
+        shift_log_file, "r"
+    ) as log_file:
+        for line in infile:
+            decrypted_line = ""
+            for char in line:
+                shift_line = log_file.readline().strip()
+                shift, direction = shift_line.split(",")
+                shift = int(shift)
+
+                if direction in ["forward", "backward"]:
+                    decrypted_char = decrypt_char(char, shift, direction)
+                else:
+                    decrypted_char = char  # non-alphabetic characters
+
+                decrypted_line += decrypted_char
+            outfile.write(decrypted_line)
+
+
+def main():
+    n = int(input("Enter value for n: "))
+    m = int(input("Enter value for m: "))
+
+    input_file = raw_text_path
+    encrypted_file = "encrypted_text.txt"
+    decrypted_file = "decrypted_text.txt"
+    shift_log_file = "shift_log.txt"
+
+    encrypt_text(input_file, encrypted_file, n, m, shift_log_file)
+    decrypt_text(encrypted_file, decrypted_file, shift_log_file)
+
+    print("\nContents of raw_text.txt:")
+    with open(input_file, "r") as f:
+        print(f.read())
+
+    print("\nContents of encrypted_text.txt:")
+    with open(encrypted_file, "r") as f:
+        print(f.read())
+
+    print("\nContents of decrypted_text.txt:")
+    with open(decrypted_file, "r") as f:
+        print(f.read())
+
+    with open(input_file, "r") as f1, open(decrypted_file, "r") as f2:
+        if f1.read() == f2.read():
+            print("\n✅ Decryption is correct!")
         else:
-            new_char = char
-        encrypted.append(new_char)
-
-    encrypted_text = "".join(encrypted)
-
-    with open("encrypted_text.txt", "w") as file:
-        file.write(encrypted_text)
-
-    return encrypted_text
-
-
-def decrypt_text(n, m, encrypted_text):
-    decrypted = []
-    for char in encrypted_text:
-        if char.islower():
-            if char <= "m":
-                # Reverse shift forward by n*m (shift backward)
-                shift = (n * m) % 26
-                new_char = chr(((ord(char) - ord("a") - shift) % 26) + ord("a"))
-            else:
-                # Reverse shift backward by n+m (shift forward)
-                shift = (n + m) % 26
-                new_char = chr(((ord(char) - ord("a") + shift) % 26) + ord("a"))
-        elif char.isupper():
-            if char <= "M":
-                # Reverse shift backward by n (shift forward)
-                shift = n % 26
-                new_char = chr(((ord(char) - ord("A") + shift) % 26) + ord("A"))
-            else:
-                # Reverse shift forward by m^2 (shift backward)
-                shift = (m**2) % 26
-                new_char = chr(((ord(char) - ord("A") - shift) % 26) + ord("A"))
-        else:
-            new_char = char
-        decrypted.append(new_char)
-
-    return "".join(decrypted)
-
-
-def check_correctness(original_file, decrypted_text):
-    try:
-        with open(original_file, "r") as file:
-            original_text = file.read()
-    except FileNotFoundError:
-        print(f"Error: {original_file} not found.")
-        return False
-
-    return original_text == decrypted_text
+            print("\n❌ Decryption is incorrect!")
 
 
 if __name__ == "__main__":
-    try:
-        n = int(input("Enter value for n: "))
-        m = int(input("Enter value for m: "))
-    except ValueError:
-        print("Please enter valid integers for n and m.")
-        exit()
-
-    encrypted = encrypt_text(n, m)
-    if encrypted:
-        print("Text encrypted and saved to encrypted_text.txt")
-
-        decrypted = decrypt_text(n, m, encrypted)
-        print("\nDecrypted text:")
-        print(decrypted)
-
-        is_correct = check_correctness(
-            raw_text_path,
-            decrypted,
-        )
-        if is_correct:
-            print("\nDecryption is correct!")
-        else:
-            print("\nDecryption is incorrect!")
-    else:
-        print("Encryption failed.")
+    main()
