@@ -36,6 +36,30 @@ Read from `raw_text.txt`, encrypt the text using custom logic, write to `encrypt
   - `N-Z`: shift **forward** by `m^2`
 - All other characters (digits, symbols, etc.) remain **unchanged**.
 
+#### Example
+
+##### Input
+- Enter value for n: 2
+- Enter value for m: 3
+
+----
+
+##### Output
+
+##### Contents of `raw_text.txt`:
+The quick brown fox jumps over the lazy dog beneath the shady willows. The dog, startled from his peaceful afternoon nap, quickly rises and chases after the mischievous fox. Through vibrant meadows and past buzzing beehives they race, disturbing a flock of quails that scatter into the crisp autumn sky. The fox, quite pleased with his clever prank, dashes into his cozy underground den while the dog, now exhausted from the zealous pursuit, returns to his favorite spot under the whispering branches to resume his quiet slumber.
+
+##### Contents of `encrypted_text.txt`:
+Cnk lpoiq hmjri ljs ppskn jqkm onk rgut jjm hkikgon onk nngjt rorrjrn. Cnk jjm, nogmorkj lmjs non kkgiklpr glokmijji igk, lpoiqrt monkn gij ingnkn glokm onk soninokqjpn ljs. Cnmjpmn qohmgio skgjjrn gij kgno hpuuoim hkknoqkn onkt mgik, jonopmhoim g lrjiq jl lpgorn ongo nigookm oioj onk imonk gpopsi nqt. Cnk ljs, lpook krkgnkj roon non irkqkm kmgiq, jgnnkn oioj non ijut pijkmmmjpij jki rnork onk jjm, ijr ksngpnokj lmjs onk ukgrjpn kpmnpoo, mkopmin oj non lgqjmook nkjo pijkm onk rnonkkmoim hmgiinkn oj mknpsk non lpoko nrpshkm.
+
+##### Contents of `decrypted_text.txt`:
+The quick brown fox jumps over the lazy dog beneath the shady willows. The dog, startled from his peaceful afternoon nap, quickly rises and chases after the mischievous fox. Through vibrant meadows and past buzzing beehives they race, disturbing a flock of quails that scatter into the crisp autumn sky. The fox, quite pleased with his clever prank, dashes into his cozy underground den while the dog, now exhausted from the zealous pursuit, returns to his favorite spot under the whispering branches to resume his quiet slumber.
+
+##### Result
+
+- ✅ Decryption is correct!
+
+
 ### 📊 Question 2 - Weather Data Analysis
 
 **Objective:**  
