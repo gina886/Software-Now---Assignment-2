@@ -130,6 +130,6 @@ with open('warmest_and_coolest_station.txt', 'w') as f:
         f.write(f"{station} (Average Temp: {coolest_temp:.2f}°C)\n")
 
 print("Analysis complete. Results saved to:")
-print("- average_temp.txt")
-print("- largest_temp_range_station.txt")
-print("- warmest_and_coolest_station.txt")
+print("average_temp.txt")
+print("largest_temp_range_station.txt")
+print("warmest_and_coolest_station.txt")
